@@ -5,7 +5,10 @@ rvm:
   - 2.2.1
 
 before_install:
-  - ./install_travis_dependencies.sh
+  - sudo apt-get install -y --force-yes build-essential ca-certificates git curl
+  - sudo add-apt-repository ppa:cwchien/gradle -y
+  - sudo apt-get update
+  - sudo apt-get install -y --force-yes gradle
 
 install:
   - gem install json colorize nokogiri rubocop
@@ -29,15 +32,31 @@ env:
 matrix:
   include:
     - env: SNIPPET_LANGUAGE=python:curl
-      dist: precise
+      language: python
+      python: 2.7
+      before_script:
+        - sudo pip install -r requirements.txt
+    - env: SNIPPET_LANGUAGE=node
+      language: node
+      node: latest
+      before_script:
+        - npm install
+    - env: SNIPPET_LANGUAGE=ruby
+      language: ruby
+      before_script:
+        - npm install
+    - env: SNIPPET_LANGUAGE=php
+      language: php
+      php: 5.6
     - env: SNIPPET_LANGUAGE=java6
+      language: java
       jdk: oraclejdk7
     - env: SNIPPET_LANGUAGE=java7
+      language: java
       jdk: oraclejdk8
-    - language: csharp
+    - env: SNIPPET_LANGUAGE=csharp
+      language: csharp
       mono: latest
-      env: SNIPPET_LANGUAGE=csharp:ruby
-    - env: SNIPPET_LANGUAGE=node:php
 
 addons:
   hosts:
